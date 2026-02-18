@@ -1,3 +1,6 @@
+/* ------------------------- */
+/*  Body and background      */
+/* ------------------------- */
 body {
     margin: 0;
     padding: 0;
@@ -6,7 +9,6 @@ body {
     overflow: hidden;
 }
 
-/* Background paper texture effect */
 body::before {
     content: "";
     position: fixed;
@@ -16,14 +18,15 @@ body::before {
     pointer-events: none;
 }
 
-/* Main container */
+/* ------------------------- */
+/*  Room and title           */
+/* ------------------------- */
 .room {
     position: relative;
     width: 100vw;
     height: 100vh;
 }
 
-/* Title styling */
 .title {
     position: absolute;
     top: 40px;
@@ -36,7 +39,9 @@ body::before {
     box-shadow: 4px 4px 0px #222;
 }
 
-/* Objects */
+/* ------------------------- */
+/*  Objects in the room      */
+/* ------------------------- */
 .object {
     position: absolute;
     padding: 20px 30px;
@@ -51,24 +56,13 @@ body::before {
     transform: rotate(2deg) scale(1.05);
 }
 
-.sketchbook {
-    top: 220px;
-    left: 150px;
-    transform: rotate(4deg);
-}
+.sketchbook { top: 220px; left: 150px; transform: rotate(4deg); }
+.stereo { top: 380px; left: 420px; transform: rotate(-2deg); }
+.computer { top: 180px; left: 720px; transform: rotate(3deg); }
 
-.stereo {
-    top: 380px;
-    left: 420px;
-    transform: rotate(-2deg);
-}
-
-.computer {
-    top: 180px;
-    left: 720px;
-    transform: rotate(3deg);
-}
-
+/* ------------------------- */
+/*  Audio toggle button      */
+/* ------------------------- */
 #audioToggle {
     position: fixed;
     bottom: 20px;
@@ -81,6 +75,7 @@ body::before {
     cursor: pointer;
     transform: rotate(-2deg);
     transition: transform 0.1s ease;
+    z-index: 999; /* ensures it’s on top */
 }
 
 #audioToggle:hover {
