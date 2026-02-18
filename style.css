@@ -1,0 +1,70 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #e8e3d9;
+    font-family: "Courier New", monospace;
+    overflow: hidden;
+}
+
+/* Background paper texture effect */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("https://www.transparenttextures.com/patterns/paper.png");
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+/* Main container */
+.room {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Title styling */
+.title {
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    font-size: 2.5rem;
+    transform: rotate(-3deg);
+    background: #fdfbf7;
+    padding: 15px 25px;
+    border: 2px solid #222;
+    box-shadow: 4px 4px 0px #222;
+}
+
+/* Objects */
+.object {
+    position: absolute;
+    padding: 20px 30px;
+    background: #fdfbf7;
+    border: 2px solid #222;
+    box-shadow: 6px 6px 0px #222;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.object:hover {
+    transform: rotate(2deg) scale(1.05);
+}
+
+.sketchbook {
+    top: 220px;
+    left: 150px;
+    transform: rotate(4deg);
+}
+
+.stereo {
+    top: 380px;
+    left: 420px;
+    transform: rotate(-2deg);
+}
+
+.computer {
+    top: 180px;
+    left: 720px;
+    transform: rotate(3deg);
+}
