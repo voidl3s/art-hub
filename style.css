@@ -69,7 +69,7 @@ body::before {
     transform: rotate(3deg);
 }
 
-.audioToggle {
+#audioToggle {
     position: fixed;
     bottom: 20px;
     right: 20px;
@@ -83,6 +83,6 @@ body::before {
     transition: transform 0.1s ease;
 }
 
-.audioToggle:hover {
+#audioToggle:hover {
     transform: rotate(1deg) scale(1.05);
 }
