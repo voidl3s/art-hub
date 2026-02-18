@@ -52,7 +52,7 @@ body::before {
 
 
 
-.sketchbook { top: 220px; left: 150px; transform: rotate(4deg); }
+.sketchbook { top: 800px; left: 150px; transform: rotate(4deg); }
 .stereo { top: 380px; left: 420px; transform: rotate(-2deg); }
 .computer { top: 180px; left: 720px; transform: rotate(3deg); }
 
