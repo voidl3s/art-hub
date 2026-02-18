@@ -68,3 +68,21 @@ body::before {
     left: 720px;
     transform: rotate(3deg);
 }
+
+#audioToggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background: #fdfbf7;
+    border: 2px solid #222;
+    box-shadow: 3px 3px 0 #222;
+    font-family: monospace;
+    cursor: pointer;
+    transform: rotate(-2deg);
+    transition: transform 0.1s ease;
+}
+
+#audioToggle:hover {
+    transform: rotate(1deg) scale(1.05);
+}
