@@ -10,12 +10,10 @@ body {
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image: url("https://www.transparenttextures.com/patterns/paper.png");
-    opacity: 0.4;
-    pointer-events: none;
+  background-image: url("https://www.transparenttextures.com/patterns/paper.png"),
+                    url("https://www.transparenttextures.com/patterns/cubes.png");
+  background-repeat: repeat;
+  opacity: 0.6;
 }
 
 /* ------------------------- */
