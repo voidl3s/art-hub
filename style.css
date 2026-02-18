@@ -52,10 +52,23 @@ body::before {
 
 
 
-.sketchbook { top: 800px; left: 150px; transform: rotate(4deg); }
-.stereo { top: 380px; left: 420px; transform: rotate(-2deg); }
-.computer { top: 180px; left: 720px; transform: rotate(3deg); }
+.digital-art-link {
+    top: 200px;
+    left: 150px;
+    transform: rotate(-3deg);
+}
 
+.music-link {
+    top: 250px;
+    left: 400px;
+    transform: rotate(2deg);
+}
+
+.model-link {
+    top: 300px;
+    left: 700px;
+    transform: rotate(-1deg);
+}
 /* ------------------------- */
 /*  Audio toggle button      */
 /* ------------------------- */
