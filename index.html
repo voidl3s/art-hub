@@ -2,26 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CliffUnderaTree</title>
+    <title>Our Art Hub</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <body>
-<audio id="ambientMusic" autoplay loop>
-    <source src="audio/daroomDemo1.mp3" type="audio/mpeg">
-</audio>
+
 <div class="room">
+    <div class="title">Welcome to Our Art Hub</div>
 
-    <div class="title">Cliff Under a Tree</div>
-
-    <div class="object sketchbook">📓 Sketchbook</div>
-    <div class="object stereo">🎵 Stereo</div>
-    <div class="object computer">💻 3D Lab</div>
-
+    <!-- Lobby links to sections -->
+    <div class="object lobby-link">
+        <a href="digital-art.html">📓 Digital Art</a>
+    </div>
+    <div class="object lobby-link">
+        <a href="music.html">🎵 Music</a>
+    </div>
+    <div class="object lobby-link">
+        <a href="3d-models.html">💻 3D Models</a>
+    </div>
 </div>
-<button id="audioToggle">MUSIC ON</button>
+
+<audio id="ambientMusic" autoplay loop>
+    <source src="audio/ambient.mp3" type="audio/mpeg">
+</audio>
+<button id="audioToggle">🔊 Music On</button>
+
 <script src="script.js"></script>
-</body>
 </body>
 </html>

@@ -50,9 +50,7 @@ body::before {
     transition: transform 0.2s ease;
 }
 
-.object:hover {
-    transform: rotate(2deg) scale(1.05);
-}
+
 
 .sketchbook { top: 220px; left: 150px; transform: rotate(4deg); }
 .stereo { top: 380px; left: 420px; transform: rotate(-2deg); }
@@ -87,4 +85,7 @@ body::before {
 
 .object {
   animation: float 4s ease-in-out infinite;
+}
+.object:hover {
+    transform: rotate(2deg) scale(1.05);
 }
