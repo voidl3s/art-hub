@@ -1,19 +1,22 @@
 const music = document.getElementById("ambientMusic");
-music.volume = 0.2; // 20% volume
-music.play().catch(() => {
-    console.log("Autoplay blocked. User needs to interact to start music.");
-});
-
-const music = document.getElementById("ambientMusic");
 const toggle = document.getElementById("audioToggle");
 
-// Start music muted until user clicks
+// Set initial volume
 music.volume = 0.2;
-music.pause(); // pause autoplay until user interacts
 
+// Check if the music is paused on load (e.g., Firefox blocked autoplay)
+if (music.paused) {
+    toggle.textContent = "🔇 Music Off";
+} else {
+    toggle.textContent = "🔊 Music On";
+}
+
+// Add toggle functionality
 toggle.addEventListener("click", () => {
     if (music.paused) {
-        music.play();
+        music.play().catch(() => {
+            console.log("Autoplay blocked. User needs to interact.");
+        });
         toggle.textContent = "🔊 Music On";
     } else {
         music.pause();
