@@ -13,7 +13,7 @@ function updateButton() {
     }
 }
 
-// Update button on page load
+//Update button on page load
 updateButton();
 
 // Toggle music on button click
