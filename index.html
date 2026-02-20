@@ -1,32 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Our Art Hub</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Digital Art</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="room">
-    <div class="title">a cliff under a tree</div>
+<div class="grid-background"></div>
 
-    <!-- Lobby links to sections -->
-    <div class="object lobby-link digital-art-link">
-        <a href="digital-art.html">📓 Digital Art</a>
-    </div>
-    <div class="object lobby-link music-link">
-        <a href="music.html">🎵 Music</a>
-    </div>
-    <div class="object lobby-link model-link">
-        <a href="3d-models.html">💻 3D Models</a>
-    </div>
+<div class="page">
+
+  <header class="top-bar">
+    <div class="logo">DE<br>SCHOOL</div>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+      <a href="digital-art.html">Digital</a>
+      <a href="music.html">Music</a>
+      <a href="3d-models.html">3D</a>
+    </nav>
+  </header>
+
+  <main class="content">
+
+    <section class="block large">
+      <h1>THIS WEEK</h1>
+    </section>
+
+    <section class="block">
+      <h2>Featured Work</h2>
+      <p>Artist Name — 2026</p>
+    </section>
+
+    <section class="block image-block">
+      <img src="images/art1.jpg">
+    </section>
+
+  </main>
+
 </div>
 
-<audio id="ambientMusic" autoplay loop>
-    <source src="audio/ambient.mp3" type="audio/mpeg">
-</audio>
-<button id="audioToggle">🔊 Music On</button>
-
-<script src="script.js"></script>
 </body>
 </html>

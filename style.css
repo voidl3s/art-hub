@@ -1,104 +1,71 @@
-/* ------------------------- */
-/*  Body and background      */
-/* ------------------------- */
+/* ====== BASE ====== */
 body {
-    margin: 0;
-    padding: 0;
-    background-color: #e8e3d9;
-    font-family: "Courier New", monospace;
-    overflow: hidden;
+  margin: 0;
+  background: #e8e3db;
+  font-family: Helvetica, Arial, sans-serif;
+  color: #111;
 }
 
-body::before {
-  background-image: url("https://www.transparenttextures.com/patterns/paper.png"),
-                    url("https://www.transparenttextures.com/patterns/cubes.png");
-  background-repeat: repeat;
-  opacity: 0.6;
+/* ====== BACKGROUND GRID ====== */
+.grid-background {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(#000 1px, transparent 1px),
+    linear-gradient(90deg, #000 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.2;
+  pointer-events: none;
+  z-index: 0;
 }
 
-/* ------------------------- */
-/*  Room and title           */
-/* ------------------------- */
-.room {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+/* ====== PAGE WRAPPER ====== */
+.page {
+  position: relative;
+  z-index: 1;
+  padding: 40px;
 }
 
-.title {
-    position: absolute;
-    top: 40px;
-    left: 60px;
-    font-size: 2.5rem;
-    transform: rotate(-3deg);
-    background: #fdfbf7;
-    padding: 15px 25px;
-    border: 2px solid #222;
-    box-shadow: 4px 4px 0px #222;
+/* ====== TOP BAR ====== */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 80px;
 }
 
-/* ------------------------- */
-/*  Objects in the room      */
-/* ------------------------- */
-.object {
-    position: absolute;
-    padding: 20px 30px;
-    background: #fdfbf7;
-    border: 2px solid #222;
-    box-shadow: 6px 6px 0px #222;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+.logo {
+  border: 2px solid #000;
+  padding: 10px;
+  font-weight: bold;
 }
 
-
-
-.digital-art-link {
-    top: 200px;
-    left: 400px;
-    transform: rotate(-3deg);
+.main-nav a {
+  margin-left: 20px;
+  text-decoration: none;
+  color: black;
 }
 
-.music-link {
-    top: 250px;
-    left: 400px;
-    transform: rotate(2deg);
+/* ====== CONTENT GRID ====== */
+.content {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 40px;
 }
 
-.model-link {
-    top: 300px;
-    left: 700px;
-    transform: rotate(-1deg);
-}
-/* ------------------------- */
-/*  Audio toggle button      */
-/* ------------------------- */
-#audioToggle {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    background: #fdfbf7;
-    border: 2px solid #222;
-    box-shadow: 3px 3px 0 #222;
-    font-family: monospace;
-    cursor: pointer;
-    transform: rotate(-2deg);
-    transition: transform 0.1s ease;
-    z-index: 999; /* ensures it’s on top */
+/* ====== BLOCKS ====== */
+.block {
+  grid-column: span 4;
+  background: #e8e3db;
+  border: 2px solid #000;
+  padding: 20px;
 }
 
-#audioToggle:hover {
-    transform: rotate(1deg) scale(1.05);
-}
-@keyframes float {
-  0% { transform: translateY(0) rotate(-2deg); }
-  50% { transform: translateY(-6px) rotate(3deg); }
-  100% { transform: translateY(0) rotate(-2deg); }
+.block.large {
+  grid-column: span 8;
+  font-size: 2rem;
 }
 
-.object {
-  animation: float 4s ease-in-out infinite;
-}
-.object:hover {
-    transform: rotate(2deg) scale(1.05);
+.image-block img {
+  width: 100%;
+  display: block;
 }
