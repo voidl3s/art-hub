@@ -1,0 +1,75 @@
+body {
+  margin: 0;
+  font-family: "Times New Roman", serif;
+  background: #e8e4db;
+  color: #111;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 60px;
+}
+
+.nav a {
+  margin-left: 30px;
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+}
+
+.nav a:hover {
+  opacity: 0.5;
+}
+
+/* Big Page Title */
+.page-intro {
+  padding: 60px;
+}
+
+.page-intro h1 {
+  font-size: 120px;
+  margin: 0;
+  letter-spacing: -2px;
+  line-height: 0.9;
+}
+
+.section-description {
+  font-size: 18px;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+/* Works */
+.works {
+  padding: 0 60px 100px;
+}
+
+.work {
+  margin-bottom: 140px;
+  position: relative;
+}
+
+.work-title {
+  font-size: 72px;
+  margin: 0;
+  line-height: 0.95;
+}
+
+.work-meta {
+  font-size: 14px;
+  margin: 10px 0 30px;
+  opacity: 0.6;
+}
+
+.work img {
+  width: 60%;
+  margin-top: 20px;
+}
+
+/* Slight life on hover */
+.work-title:hover {
+  letter-spacing: 2px;
+  transition: 0.3s ease;
+}
