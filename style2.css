@@ -86,3 +86,11 @@ body {
   letter-spacing: 2px;
   transition: 0.3s ease;
 }
+.work-title {
+  mix-blend-mode: multiply;
+}
+
+.work:hover img {
+  transform: scale(1.02);
+  transition: 0.4s ease;
+}
