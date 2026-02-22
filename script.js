@@ -1,174 +1,291 @@
-const music = document.getElementById("ambientMusic");
-const toggle = document.getElementById("audioToggle");
-let zIndexCounter = 6000;
+// ============================================
+// WINDOW MANAGEMENT & Z-INDEX STACK
+// ============================================
 
-document.querySelectorAll(".retro-click").forEach(img => {
-  img.addEventListener("click", () => {
-    createWindow(img.src);
-  });
-});
+class WindowStack {
+  constructor() {
+    this.windows = [];
+    this.baseZIndex = 6000;
+  }
+
+  add(win) {
+    this.windows.push(win);
+    this.updateZIndices();
+  }
+
+  remove(win) {
+    this.windows = this.windows.filter(w => w !== win);
+    this.updateZIndices();
+  }
+
+  bringToFront(win) {
+    this.remove(win);
+    this.add(win);
+  }
+
+  updateZIndices() {
+    this.windows.forEach((win, index) => {
+      win.style.zIndex = this.baseZIndex + index;
+    });
+  }
+}
+
+const windowStack = new WindowStack();
+
+// ============================================
+// DRAG & RESIZE STATE MANAGEMENT
+// ============================================
+
+let dragState = null;
+let resizeState = null;
+
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
+
+function getRandomPosition() {
+  const maxX = Math.max(0, window.innerWidth - 400);
+  const maxY = Math.max(0, window.innerHeight - 300);
+  return {
+    x: Math.random() * maxX + 50,
+    y: Math.random() * maxY + 50,
+  };
+}
+
+function cleanupWindowListeners(win, bringToFrontHandler, closeHandler) {
+  win.removeEventListener("mousedown", bringToFrontHandler);
+  const closeButton = win.querySelector(".window-close");
+  if (closeButton) {
+    closeButton.removeEventListener("click", closeHandler);
+    closeButton.removeEventListener("keydown", closeHandler);
+  }
+}
+
+// ============================================
+// WINDOW CREATION
+// ============================================
 
 function createWindow(imageSrc) {
-
   const win = document.createElement("div");
   win.classList.add("window");
-  win.style.top = Math.random() * 200 + 100 + "px";
-  win.style.left = Math.random() * 200 + 100 + "px";
-  win.style.zIndex = zIndexCounter++;
+
+  const pos = getRandomPosition();
+  win.style.top = pos.y + "px";
+  win.style.left = pos.x + "px";
+
+  win.setAttribute("role", "dialog");
+  win.setAttribute("aria-label", "Image viewer window");
 
   win.innerHTML = `
     <div class="window-header">
       <span>Image Viewer</span>
-      <div class="window-close">×</div>
+      <div class="window-close" tabindex="0" role="button" aria-label="Close window">×</div>
     </div>
     <div class="window-content">
-      <img src="${imageSrc}">
-    <div class="resize resize-br"></div>
-    <div class="resize resize-bl"></div>
-    <div class="resize resize-tr"></div>
-    <div class="resize resize-tl"></div>
+      <img src="${imageSrc}" alt="Displayed artwork">
+      <div class="resize resize-br" aria-label="Resize bottom-right"></div>
+      <div class="resize resize-bl" aria-label="Resize bottom-left"></div>
+      <div class="resize resize-tr" aria-label="Resize top-right"></div>
+      <div class="resize resize-tl" aria-label="Resize top-left"></div>
     </div> 
   `;
 
   document.body.appendChild(win);
+  windowStack.add(win);
 
-  // Bring to front when clicked
-  win.addEventListener("mousedown", () => {
-    win.style.zIndex = zIndexCounter++;
-  });
+  // Bring to front handler
+  const bringToFront = () => {
+    windowStack.bringToFront(win);
+  };
+  win.addEventListener("mousedown", bringToFront);
 
-  // Close button
-  win.querySelector(".window-close").addEventListener("click", () => {
+  // Close window handler
+  const closeHandler = (e) => {
+    if (e.type === "keydown" && e.key !== "Enter" && e.key !== " ") {
+      return;
+    }
+    if (e.type === "keydown") {
+      e.preventDefault();
+    }
+    cleanupWindowListeners(win, bringToFront, closeHandler);
+    windowStack.remove(win);
     win.remove();
-  });
+  };
+
+  const closeButton = win.querySelector(".window-close");
+  closeButton.addEventListener("click", closeHandler);
+  closeButton.addEventListener("keydown", closeHandler);
 
   makeDraggable(win);
+  makeResizable(win);
 }
+
+// ============================================
+// DRAGGABLE FUNCTIONALITY
+// ============================================
 
 function makeDraggable(win) {
   const header = win.querySelector(".window-header");
 
-  let offsetX = 0;
-  let offsetY = 0;
-  let isDragging = false;
-
   header.addEventListener("mousedown", (e) => {
-    isDragging = true;
-    offsetX = e.clientX - win.offsetLeft;
-    offsetY = e.clientY - win.offsetTop;
-  });
-
-  document.addEventListener("mousemove", (e) => {
-    if (!isDragging) return;
-    win.style.left = e.clientX - offsetX + "px";
-    win.style.top = e.clientY - offsetY + "px";
-  });
-
-  document.addEventListener("mouseup", () => {
-    isDragging = false;
+    dragState = {
+      window: win,
+      offsetX: e.clientX - win.offsetLeft,
+      offsetY: e.clientY - win.offsetTop,
+    };
   });
 }
 
-// Set initial volume
-music.volume = 0.2;
-
-// Function to update button text
-function updateButton() {
-    if (music.paused) {
-        toggle.textContent = "🔇 Music Off";
-    } else {
-        toggle.textContent = "🔊 Music On";
-    }
-}
-
-//Update button on page load
-updateButton();
-
-// Toggle music on button click
-toggle.addEventListener("click", () => {
-    if (music.paused) {
-        music.play().catch(() => {
-            console.log("Autoplay blocked. User needs to click to start music.");
-        });
-    } else {
-        music.pause();
-    }
-    updateButton(); // Immediately update button after click
-});
-
-// Optional: update button if the audio state changes elsewhere
-music.addEventListener("play", updateButton);
-music.addEventListener("pause", updateButton);
+// ============================================
+// RESIZABLE FUNCTIONALITY
+// ============================================
 
 function makeResizable(win) {
   const handles = win.querySelectorAll(".resize");
+  const minWidth = 200;
+  const minHeight = 150;
 
-  handles.forEach(handle => {
+  handles.forEach((handle) => {
     handle.addEventListener("mousedown", (e) => {
       e.preventDefault();
       e.stopPropagation();
 
       const rect = win.getBoundingClientRect();
-
-      const startWidth = rect.width;
-      const startHeight = rect.height;
-      const startLeft = rect.left;
-      const startTop = rect.top;
-
-      const startX = e.clientX;
-      const startY = e.clientY;
-
-      function onMouseMove(e) {
-        const deltaX = e.clientX - startX;
-        const deltaY = e.clientY - startY;
-
-        let newWidth = startWidth;
-        let newHeight = startHeight;
-        let newLeft = startLeft;
-        let newTop = startTop;
-
-        if (handle.classList.contains("resize-br")) {
-          newWidth = startWidth + deltaX;
-          newHeight = startHeight + deltaY;
-        }
-
-        if (handle.classList.contains("resize-bl")) {
-          newWidth = startWidth - deltaX;
-          newHeight = startHeight + deltaY;
-          newLeft = startLeft + deltaX;
-        }
-
-        if (handle.classList.contains("resize-tr")) {
-          newWidth = startWidth + deltaX;
-          newHeight = startHeight - deltaY;
-          newTop = startTop + deltaY;
-        }
-
-        if (handle.classList.contains("resize-tl")) {
-          newWidth = startWidth - deltaX;
-          newHeight = startHeight - deltaY;
-          newLeft = startLeft + deltaX;
-          newTop = startTop + deltaY;
-        }
-
-        if (newWidth > 200) {
-          win.style.width = newWidth + "px";
-          win.style.left = newLeft + "px";
-        }
-
-        if (newHeight > 150) {
-          win.style.height = newHeight + "px";
-          win.style.top = newTop + "px";
-        }
-      }
-
-      function onMouseUp() {
-        document.removeEventListener("mousemove", onMouseMove);
-        document.removeEventListener("mouseup", onMouseUp);
-      }
-
-      document.addEventListener("mousemove", onMouseMove);
-      document.addEventListener("mouseup", onMouseUp);
+      resizeState = {
+        handle,
+        startX: e.clientX,
+        startY: e.clientY,
+        startWidth: rect.width,
+        startHeight: rect.height,
+        startLeft: rect.left,
+        startTop: rect.top,
+        window: win,
+        minWidth,
+        minHeight,
+      };
     });
   });
+}
+
+// ============================================
+// GLOBAL MOUSE MOVEMENT & RESIZE HANDLING
+// ============================================
+
+document.addEventListener("mousemove", (e) => {
+  // Handle dragging
+  if (dragState) {
+    const { window: win, offsetX, offsetY } = dragState;
+    win.style.left = e.clientX - offsetX + "px";
+    win.style.top = e.clientY - offsetY + "px";
+  }
+
+  // Handle resizing
+  if (resizeState) {
+    const {
+      handle,
+      startX,
+      startY,
+      startWidth,
+      startHeight,
+      startLeft,
+      startTop,
+      window: win,
+      minWidth,
+      minHeight,
+    } = resizeState;
+
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+
+    let newWidth = startWidth;
+    let newHeight = startHeight;
+    let newLeft = startLeft;
+    let newTop = startTop;
+
+    if (handle.classList.contains("resize-br")) {
+      newWidth = startWidth + deltaX;
+      newHeight = startHeight + deltaY;
+    } else if (handle.classList.contains("resize-bl")) {
+      newWidth = startWidth - deltaX;
+      newHeight = startHeight + deltaY;
+      newLeft = startLeft + deltaX;
+    } else if (handle.classList.contains("resize-tr")) {
+      newWidth = startWidth + deltaX;
+      newHeight = startHeight - deltaY;
+      newTop = startTop + deltaY;
+    } else if (handle.classList.contains("resize-tl")) {
+      newWidth = startWidth - deltaX;
+      newHeight = startHeight - deltaY;
+      newLeft = startLeft + deltaX;
+      newTop = startTop + deltaY;
+    }
+
+    // Apply constraints
+    if (newWidth >= minWidth) {
+      win.style.width = newWidth + "px";
+      win.style.left = newLeft + "px";
+    }
+
+    if (newHeight >= minHeight) {
+      win.style.height = newHeight + "px";
+      win.style.top = newTop + "px";
+    }
+  }
+});
+
+document.addEventListener("mouseup", () => {
+  dragState = null;
+  resizeState = null;
+});
+
+// ============================================
+// CLICKABLE IMAGES INITIALIZATION
+// ============================================
+
+document.querySelectorAll(".retro-click").forEach((img) => {
+  img.addEventListener("click", () => {
+    createWindow(img.src);
+  });
+});
+
+// ============================================
+// MUSIC PLAYER
+// ============================================
+
+const music = document.getElementById("ambientMusic");
+const toggle = document.getElementById("audioToggle");
+
+if (music && toggle) {
+  // Set initial volume
+  music.volume = 0.2;
+
+  // Update button text based on music state
+  function updateButton() {
+    if (music.paused) {
+      toggle.textContent = "🔇 Music Off";
+    } else {
+      toggle.textContent = "🔊 Music On";
+    }
+  }
+
+  // Update button on page load
+  updateButton();
+
+  // Toggle music on button click
+  toggle.addEventListener("click", () => {
+    if (music.paused) {
+      music.play().catch(() => {
+        console.log(
+          "Autoplay blocked. User needs to click to start music."
+        );
+      });
+    } else {
+      music.pause();
+    }
+    updateButton();
+  });
+
+  // Update button if audio state changes elsewhere
+  music.addEventListener("play", updateButton);
+  music.addEventListener("pause", updateButton);
 }
