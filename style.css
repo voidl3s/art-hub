@@ -2,6 +2,7 @@
 body {
   margin: 0;
   background-image:url("backgrounds/webbackground1.jpg") ;
+  background-position: fixed;
   font-family: Helvetica, Arial, sans-serif;
   color: #ff0000;
   cursor: crosshair;
