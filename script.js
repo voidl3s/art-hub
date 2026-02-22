@@ -23,7 +23,11 @@ function createWindow(imageSrc) {
     </div>
     <div class="window-content">
       <img src="${imageSrc}">
-    </div>
+    <div class="resize resize-br"></div>
+    <div class="resize resize-bl"></div>
+    <div class="resize resize-tr"></div>
+    <div class="resize resize-tl"></div>
+    </div> 
   `;
 
   document.body.appendChild(win);
@@ -95,3 +99,76 @@ toggle.addEventListener("click", () => {
 // Optional: update button if the audio state changes elsewhere
 music.addEventListener("play", updateButton);
 music.addEventListener("pause", updateButton);
+
+function makeResizable(win) {
+  const handles = win.querySelectorAll(".resize");
+
+  handles.forEach(handle => {
+    handle.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const rect = win.getBoundingClientRect();
+
+      const startWidth = rect.width;
+      const startHeight = rect.height;
+      const startLeft = rect.left;
+      const startTop = rect.top;
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+
+      function onMouseMove(e) {
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+
+        let newWidth = startWidth;
+        let newHeight = startHeight;
+        let newLeft = startLeft;
+        let newTop = startTop;
+
+        if (handle.classList.contains("resize-br")) {
+          newWidth = startWidth + deltaX;
+          newHeight = startHeight + deltaY;
+        }
+
+        if (handle.classList.contains("resize-bl")) {
+          newWidth = startWidth - deltaX;
+          newHeight = startHeight + deltaY;
+          newLeft = startLeft + deltaX;
+        }
+
+        if (handle.classList.contains("resize-tr")) {
+          newWidth = startWidth + deltaX;
+          newHeight = startHeight - deltaY;
+          newTop = startTop + deltaY;
+        }
+
+        if (handle.classList.contains("resize-tl")) {
+          newWidth = startWidth - deltaX;
+          newHeight = startHeight - deltaY;
+          newLeft = startLeft + deltaX;
+          newTop = startTop + deltaY;
+        }
+
+        if (newWidth > 200) {
+          win.style.width = newWidth + "px";
+          win.style.left = newLeft + "px";
+        }
+
+        if (newHeight > 150) {
+          win.style.height = newHeight + "px";
+          win.style.top = newTop + "px";
+        }
+      }
+
+      function onMouseUp() {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+      }
+
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    });
+  });
+}

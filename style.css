@@ -115,4 +115,33 @@ body {
   display: block;
 }
 
+.resize {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  z-index: 10;
+}
 
+.resize-br {
+  right: 0;
+  bottom: 0;
+  cursor: se-resize;
+}
+
+.resize-bl {
+  left: 0;
+  bottom: 0;
+  cursor: sw-resize;
+}
+
+.resize-tr {
+  right: 0;
+  top: 0;
+  cursor: ne-resize;
+}
+
+.resize-tl {
+  left: 0;
+  top: 0;
+  cursor: nw-resize;
+}
