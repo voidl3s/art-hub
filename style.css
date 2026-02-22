@@ -77,10 +77,15 @@ body {
 .window {
   position: fixed;
   width: 250px;
+  height: 200px;
   background: #e0e0e0;
   border: 2px solid #000;
   box-shadow: 6px 6px 0px #000;
   z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  user-select: none;
 }
 
 .window-header {
@@ -93,6 +98,7 @@ body {
   align-items: center;
   font-family: Arial, sans-serif;
   font-size: 13px;
+  flex-shrink: 0;
 }
 
 .window-close {
@@ -109,10 +115,18 @@ body {
 .window-content {
   padding: 10px;
   background: #ffffff;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .window-content img {
   width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
 }
 
@@ -145,8 +159,4 @@ body {
   left: 0;
   top: 0;
   cursor: nw-resize;
-}
-
-.window {
-  user-select: none;
 }
