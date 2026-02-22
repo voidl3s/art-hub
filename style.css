@@ -1,7 +1,7 @@
 /* ====== BASE ====== */
 body {
   margin: 0;
-  background: #e8e3db;
+  background-image:url("backgrounds/webbackground1.jpg") ;
   font-family: Helvetica, Arial, sans-serif;
   color: #ff0000;
   cursor: crosshair;
