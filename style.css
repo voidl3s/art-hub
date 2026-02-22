@@ -2,9 +2,6 @@
 body {
   margin: 0;
   background-image:url("backgrounds/webbackground1.jpg") ;
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
   font-family: Helvetica, Arial, sans-serif;
   color: #ff0000;
   cursor: crosshair;
@@ -149,6 +146,6 @@ body {
   cursor: nw-resize;
 }
 
-body {
+.window {
   user-select: none;
 }
