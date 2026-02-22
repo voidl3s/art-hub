@@ -10,7 +10,7 @@ body {
 
 /* ====== BACKGROUND GRID ====== */
 .grid-background {
-  position: fixed;
+  /position: fixed;
   inset: 0;
   background-image:
     linear-gradient(#000 1px, transparent 1px),
