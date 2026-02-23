@@ -289,3 +289,17 @@ if (music && toggle) {
   music.addEventListener("play", updateButton);
   music.addEventListener("pause", updateButton);
 }
+//play button video on hover
+const hoverButton = document.querySelector('.hover-button');
+
+if (hoverButton) {
+  hoverButton.addEventListener('mouseenter', () => {
+    hoverButton.currentTime = 0; // Start from beginning
+    hoverButton.play();
+  });
+
+  hoverButton.addEventListener('mouseleave', () => {
+    hoverButton.pause();
+    hoverButton.currentTime = 0; // Reset to start
+  });
+}
