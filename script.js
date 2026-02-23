@@ -302,4 +302,8 @@ if (hoverButton) {
     hoverButton.pause();
     hoverButton.currentTime = 0; // Reset to start
   });
+
+  hoverButton.addEventListener('click', () => {
+    window.location.href = 'music.html';
+  });
 }
