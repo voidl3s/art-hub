@@ -157,3 +157,18 @@ body {
   top: 0;
   cursor: nw-resize;
 }
+/*FLOATING BUTTONS*/
+
+#mainButtonContainer {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  z-index: 100;
+}
+
+.hover-button {
+  cursor: pointer;
+  width: 200px;
+  height: 200px;
+  background: transparent;
+}
