@@ -1,0 +1,19 @@
+# Environment variables
+.env
+
+# Node modules
+node_modules/
+
+# IDE files
+.idea/
+*.sublime-workspace
+*.sublime-project
+.vscode/
+
+# Build artifacts
+dist/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
