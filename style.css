@@ -2,7 +2,9 @@
 body {
   margin: 0;
   background-image:url("backgrounds/BACKGROUND.jpg") ;
-  background-position: fixed;
+  background-attachment: fixed;
+background-size: cover;
+background-position: center;
   font-family: Helvetica, Arial, sans-serif;
   color: #ff0000;
   cursor: crosshair;
