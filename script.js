@@ -53,7 +53,7 @@ function getRandomPosition() {
 }
 
 function cleanupWindowListeners(win, bringToFrontHandler, closeHandler) {
-  win.removeEventListener("mousedown", bringToFrontHandler);
+  win.removeEventListener("pointerdown", bringToFrontHandler);
   const closeButton = win.querySelector(".window-close");
   if (closeButton) {
     closeButton.removeEventListener("click", closeHandler);
@@ -97,7 +97,7 @@ function createWindow(imageSrc) {
   const bringToFront = () => {
     windowStack.bringToFront(win);
   };
-  win.addEventListener("mousedown", bringToFront);
+  win.addEventListener("pointerdown", bringToFront);
 
   // Close window handler
   const closeHandler = (e) => {
@@ -116,6 +116,54 @@ function createWindow(imageSrc) {
   closeButton.addEventListener("click", closeHandler);
   closeButton.addEventListener("keydown", closeHandler);
 
+  // Make window focusable and keyboard-operable
+  win.setAttribute('tabindex', '0');
+  const keyHandler = (e) => {
+    const step = e.shiftKey ? 20 : 10;
+    const rect = win.getBoundingClientRect();
+    if (e.key === 'Escape') {
+      // close
+      cleanupWindowListeners(win, bringToFront, closeHandler);
+      windowStack.remove(win);
+      win.remove();
+      return;
+    }
+    // Move with arrows
+    if (e.key === 'ArrowLeft') {
+      win.style.left = (rect.left - step) + 'px';
+      return;
+    }
+    if (e.key === 'ArrowRight') {
+      win.style.left = (rect.left + step) + 'px';
+      return;
+    }
+    if (e.key === 'ArrowUp') {
+      win.style.top = (rect.top - step) + 'px';
+      return;
+    }
+    if (e.key === 'ArrowDown') {
+      win.style.top = (rect.top + step) + 'px';
+      return;
+    }
+    // Resize with Shift + arrows
+    if (e.shiftKey) {
+      const curW = rect.width;
+      const curH = rect.height;
+      if (e.key === 'ArrowLeft') {
+        win.style.width = Math.max(100, curW - step) + 'px';
+      }
+      if (e.key === 'ArrowRight') {
+        win.style.width = (curW + step) + 'px';
+      }
+      if (e.key === 'ArrowUp') {
+        win.style.height = Math.max(80, curH - step) + 'px';
+      }
+      if (e.key === 'ArrowDown') {
+        win.style.height = (curH + step) + 'px';
+      }
+    }
+  };
+  win.addEventListener('keydown', keyHandler);
   makeDraggable(win);
   makeResizable(win);
 }
@@ -127,7 +175,7 @@ function createWindow(imageSrc) {
 function makeDraggable(win) {
   const header = win.querySelector(".window-header");
 
-  header.addEventListener("mousedown", (e) => {
+  header.addEventListener("pointerdown", (e) => {
     dragState = {
       window: win,
       offsetX: e.clientX - win.offsetLeft,
@@ -146,7 +194,7 @@ function makeResizable(win) {
   const minHeight = 150;
 
   handles.forEach((handle) => {
-    handle.addEventListener("mousedown", (e) => {
+    handle.addEventListener("pointerdown", (e) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -171,7 +219,7 @@ function makeResizable(win) {
 // GLOBAL MOUSE MOVEMENT & RESIZE HANDLING
 // ============================================
 
-document.addEventListener("mousemove", (e) => {
+document.addEventListener("pointermove", (e) => {
   // Handle dragging
   if (dragState) {
     const { window: win, offsetX, offsetY } = dragState;
@@ -233,7 +281,7 @@ document.addEventListener("mousemove", (e) => {
   }
 });
 
-document.addEventListener("mouseup", () => {
+document.addEventListener("pointerup", () => {
   dragState = null;
   resizeState = null;
 });

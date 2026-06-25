@@ -163,8 +163,8 @@ background-position: center;
 
 #mainButtonContainer {
   position: fixed;
-  bottom: 500px;
-  right: 1200px;
+  bottom: 20px;
+  right: 20px;
   z-index: 100;
 }
 
@@ -174,3 +174,77 @@ background-position: center;
   height: 300px;
   background: transparent;
 }
+
+/* === Additional styles merged from style2.css (non-duplicating selectors) === */
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px 60px;
+}
+
+.nav a,
+.main-nav a {
+  margin-left: 30px;
+  text-decoration: none;
+  color: black;
+  font-size: 14px;
+}
+
+.nav a:hover,
+.main-nav a:hover {
+  opacity: 0.5;
+}
+
+.page-intro {
+  padding: 60px;
+}
+
+.page-intro h1 {
+  font-size: 120px;
+  margin: 0;
+  letter-spacing: -2px;
+  line-height: 0.9;
+}
+
+.section-description {
+  font-size: 18px;
+  max-width: 400px;
+  margin-top: 20px;
+}
+
+.works {
+  padding: 0 60px 100px;
+}
+
+.work {
+  margin-bottom: 140px;
+  position: relative;
+}
+
+.work-title {
+  font-size: 72px;
+  margin: 0;
+  line-height: 0.95;
+}
+
+.work-meta {
+  font-size: 14px;
+  margin: 10px 0 30px;
+  opacity: 0.6;
+}
+
+.work img {
+  width: 60%;
+  margin-top: 20px;
+}
+
+.work-title:hover {
+  letter-spacing: 2px;
+  transition: 0.3s ease;
+}
+.work-title {
+  mix-blend-mode: multiply;
+}
+
+/* End merged additions */
