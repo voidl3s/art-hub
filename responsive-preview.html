@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Responsive Preview</title>
+  <style>
+    body{font-family: Arial,Helvetica,sans-serif;margin:20px;background:#fafafa;color:#111}
+    h1{margin:0 0 12px}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+    .controls button{padding:8px 12px;border:1px solid #ccc;background:#fff;cursor:pointer}
+    .controls input{width:80px;padding:6px}
+    #frameWrap{border:1px solid #ddd;background:#fff}
+    iframe{display:block;border:0;width:100%;height:800px}
+    .meta{font-size:13px;color:#666;margin-left:8px}
+  </style>
+</head>
+<body>
+  <h1>Responsive Preview</h1>
+  <div class="controls">
+    <button data-w="360" data-h="800">Mobile 360×800</button>
+    <button data-w="412" data-h="915">Mobile XL 412×915</button>
+    <button data-w="768" data-h="1024">Tablet 768×1024</button>
+    <button data-w="1024" data-h="768">Tablet landscape 1024×768</button>
+    <button data-w="1366" data-h="768">Desktop 1366×768</button>
+    <button data-w="1920" data-h="1080">Desktop 1920×1080</button>
+    <button id="btnFull">Full width</button>
+    <label class="meta">Custom:</label>
+    <input id="customW" type="number" placeholder="width" aria-label="width"> ×
+    <input id="customH" type="number" placeholder="height" aria-label="height">
+    <button id="btnApply">Apply</button>
+    <span class="meta" id="currentSize"></span>
+  </div>
+
+  <div id="frameWrap">
+    <iframe id="preview" src="index.html" title="site preview"></iframe>
+  </div>
+
+  <script>
+    const iframe = document.getElementById('preview');
+    const current = document.getElementById('currentSize');
+
+    function setSize(w,h){
+      if(!w) { iframe.style.width = '100%'; current.textContent = 'Full width — height: '+(h||iframe.clientHeight)+'px'; return }
+      iframe.style.width = w+'px';
+      iframe.style.height = (h||800)+'px';
+      current.textContent = w+' × '+(h||800)+' px';
+    }
+
+    document.querySelectorAll('.controls button[data-w]').forEach(btn=>{
+      btn.addEventListener('click',()=> setSize(btn.dataset.w, btn.dataset.h));
+    });
+
+    document.getElementById('btnFull').addEventListener('click',()=> setSize(null,null));
+    document.getElementById('btnApply').addEventListener('click', ()=>{
+      const w = parseInt(document.getElementById('customW').value,10);
+      const h = parseInt(document.getElementById('customH').value,10);
+      if(w>0) setSize(w, h>0? h: 800);
+    });
+
+    // update current size when iframe loads
+    iframe.addEventListener('load', ()=>{
+      current.textContent = iframe.clientWidth + ' × ' + iframe.clientHeight + ' px';
+    });
+
+    // initial
+    current.textContent = iframe.clientWidth + ' × ' + iframe.clientHeight + ' px';
+  </script>
+</body>
+</html>
