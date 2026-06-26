@@ -312,11 +312,11 @@ background-position: center;
 
 @media (min-width: 2560px) {
   #mainButtonContainer .hover-button[data-href="music.html"] {
-    top: 43%;
-    left: 37%;
+    top: 40%;
+    left: 38%;
   }
   #mainButtonContainer .hover-button[data-href="digital-art.html"] {
-    top: 29%;
+    top: 31%;
     left: 48%;
   }
   #mainButtonContainer .hover-button[data-href="index.html"] {
@@ -324,8 +324,8 @@ background-position: center;
     left: 48%;
   }
   #mainButtonContainer .hover-button[data-href="3d-models.html"] {
-    top: 41%;
-    left: 59%;
+    top: 40%;
+    left: 58%;
   }
 }
 
