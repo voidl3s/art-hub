@@ -228,6 +228,8 @@ background-position: center;
   transform: translate(-50%, -50%);
   z-index: 100;
   display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
   justify-content: center;
   align-items: center;
   pointer-events: auto;
@@ -249,9 +251,16 @@ background-position: center;
 
 .hover-button {
   cursor: pointer;
-  width: 300px;
-  height: 300px;
+  width: clamp(120px, 18vw, 180px);
+  height: auto;
   background: transparent;
+}
+
+@media (max-width: 720px) {
+  #mainButtonContainer {
+    top: 50%;
+    left: 50%;
+  }
 }
 
 /* === Additional styles merged from style2.css (non-duplicating selectors) === */

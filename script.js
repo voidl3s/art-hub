@@ -338,9 +338,9 @@ if (music && toggle) {
   music.addEventListener("pause", updateButton);
 }
 //play button video on hover
-const hoverButton = document.querySelector('.hover-button');
+const hoverButtons = document.querySelectorAll('.hover-button');
 
-if (hoverButton) {
+hoverButtons.forEach((hoverButton) => {
   hoverButton.addEventListener('mouseenter', () => {
     hoverButton.currentTime = 0; // Start from beginning
     hoverButton.play();
@@ -352,6 +352,7 @@ if (hoverButton) {
   });
 
   hoverButton.addEventListener('click', () => {
-    window.location.href = 'music.html';
+    const target = hoverButton.dataset.href || 'music.html';
+    window.location.href = target;
   });
-}
+});
