@@ -272,13 +272,32 @@ background-position: center;
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1100px) and (max-width: 1919px) {
   #mainButtonContainer .hover-button[data-href="music.html"] {
     top: 33%;
     left: 26%;
   }
   #mainButtonContainer .hover-button[data-href="digital-art.html"] {
-    top: 17%;
+    top: 21%;
+    left: 48%;
+  }
+  #mainButtonContainer .hover-button[data-href="index.html"] {
+    top: 73%;
+    left: 48%;
+  }
+  #mainButtonContainer .hover-button[data-href="3d-models.html"] {
+    top: 33%;
+    left: 70%;
+  }
+}
+
+@media (min-width: 1920px) and (max-width: 2559px) {
+  #mainButtonContainer .hover-button[data-href="music.html"] {
+    top: 37%;
+    left: 33%;
+  }
+  #mainButtonContainer .hover-button[data-href="digital-art.html"] {
+    top: 21%;
     left: 48%;
   }
   #mainButtonContainer .hover-button[data-href="index.html"] {
@@ -286,8 +305,37 @@ background-position: center;
     left: 48%;
   }
   #mainButtonContainer .hover-button[data-href="3d-models.html"] {
-    top: 34%;
-    left: 70%;
+    top: 36%;
+    left: 63%;
+  }
+}
+
+@media (min-width: 2560px) {
+  #mainButtonContainer .hover-button[data-href="music.html"] {
+    top: 43%;
+    left: 37%;
+  }
+  #mainButtonContainer .hover-button[data-href="digital-art.html"] {
+    top: 29%;
+    left: 48%;
+  }
+  #mainButtonContainer .hover-button[data-href="index.html"] {
+    top: 51%;
+    left: 48%;
+  }
+  #mainButtonContainer .hover-button[data-href="3d-models.html"] {
+    top: 41%;
+    left: 59%;
+  }
+}
+
+.hover-button {
+  cursor: pointer;
+  width: clamp(120px, 18vw, 180px);
+  height: auto;
+  background: transparent;
+}
+
   }
 }
   }
