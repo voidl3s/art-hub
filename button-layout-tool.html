@@ -29,8 +29,12 @@
     .preview-toolbar { display: flex; gap: 10px; flex-wrap: wrap; padding: 12px 0; }
     .preview-label { font-size: 0.95rem; color: #4c566a; }
     #previewFrame { width: 100%; height: 640px; border: 0; display: block; pointer-events: none; }
-    #buttonMarker { position: absolute; width: 110px; height: 110px; border-radius: 50%; background: rgba(255, 60, 80, 0.16); border: 2px solid rgba(255,60,80,0.85); transform: translate(-50%, -50%); display: grid; place-items: center; color: #991b1b; font-weight: 700; cursor: grab; user-select: none; }
-    #buttonMarker.dragging { cursor: grabbing; }
+    .marker { position: absolute; width: 90px; height: 90px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; color: white; cursor: grab; user-select: none; transform: translate(-50%, -50%); }
+    .marker.dragging { cursor: grabbing; }
+    .marker-music { background: rgba(46, 134, 255, 0.95); }
+    .marker-digital { background: rgba(255, 136, 0, 0.95); }
+    .marker-home { background: rgba(34, 197, 94, 0.95); }
+    .marker-3d { background: rgba(168, 85, 247, 0.95); }
     .button-group button.button-active { background: #2e86ff; border-color: #2e86ff; color: white; }
     .panel { display: grid; gap: 14px; padding: 16px; background: #fff; border: 1px solid #dfe3ea; border-radius: 18px; }
     .panel h2 { margin: 0; font-size: 1.1rem; }
@@ -42,20 +46,14 @@
 <body>
   <main class="page">
     <h1>Button Layout Tool</h1>
-    <p>Drag the red handle to place the animated button for each screen size. Use the export panel to copy the final CSS or download it.</p>
-
+    <p>Drag any of the four markers to place the buttons across the screen for each size. Use the export panel to copy the final CSS or download it.</p>
     <section class="panel controls">
       <div class="button-group" role="group" aria-label="Device presets">
         <button type="button" data-device="mobile" class="active">Mobile</button>
         <button type="button" data-device="tablet">Tablet</button>
         <button type="button" data-device="desktop">Desktop</button>
       </div>
-      <div class="button-group" role="group" aria-label="Button selection">
-        <button type="button" data-button="music" class="button-active">Audio Works</button>
-        <button type="button" data-button="digital">Digital Art</button>
-        <button type="button" data-button="home">HOME</button>
-        <button type="button" data-button="3d">3D Works</button>
-      </div>
+      <div class="meta">Drag any of the four markers inside the preview to position that button for the current screen size.</div>
       <div class="row">
         <label class="preview-label" for="deviceWidth">Width</label>
         <input id="deviceWidth" type="number" min="320" max="1920" step="1">
@@ -72,7 +70,10 @@
 
     <section class="preview-shell" id="previewShell">
       <iframe id="previewFrame" src="index.html" title="Site preview"></iframe>
-      <div id="buttonMarker" role="button" aria-label="Drag to position the action button">BUTTON</div>
+      <div class="marker marker-music" data-button="music" role="button" aria-label="Audio Works button">A</div>
+      <div class="marker marker-digital" data-button="digital" role="button" aria-label="Digital Art button">D</div>
+      <div class="marker marker-home" data-button="home" role="button" aria-label="Home button">H</div>
+      <div class="marker marker-3d" data-button="3d" role="button" aria-label="3D Works button">3D</div>
     </section>
 
     <section class="panel">
@@ -94,10 +95,10 @@
 
     const storageKey = 'buttonLayoutPositions';
     const buttons = {
-      music: { label: 'Audio Works', href: 'music.html' },
-      digital: { label: 'Digital Art', href: 'digital-art.html' },
+      music: { label: 'AUDIO', href: 'music.html' },
+      digital: { label: 'DIGITAL', href: 'digital-art.html' },
       home: { label: 'HOME', href: 'index.html' },
-      '3d': { label: '3D Works', href: '3d-models.html' },
+      '3d': { label: '3D', href: '3d-models.html' },
     };
     const defaultPositions = Object.fromEntries(Object.keys(buttons).map(key => [key, {
       mobile: { left: 50, top: 85 },
@@ -107,7 +108,7 @@
 
     const frame = document.getElementById('previewFrame');
     const shell = document.getElementById('previewShell');
-    const marker = document.getElementById('buttonMarker');
+    const markers = Array.from(document.querySelectorAll('.marker'));
     const widthInput = document.getElementById('deviceWidth');
     const heightInput = document.getElementById('deviceHeight');
     const currentDeviceText = document.getElementById('currentDevice');
@@ -115,16 +116,16 @@
     const savedState = document.getElementById('savedState');
 
     let currentDevice = 'mobile';
-    let currentButton = 'music';
     let dragging = false;
+    let dragTarget = null;
     let positions = loadPositions();
 
     function loadPositions() {
       try {
         const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
-        return { ...defaultPositions, ...saved };
+        return JSON.parse(JSON.stringify({ ...defaultPositions, ...saved }));
       } catch (error) {
-        return { ...defaultPositions };
+        return JSON.parse(JSON.stringify(defaultPositions));
       }
     }
 
@@ -144,23 +145,18 @@
       widthInput.value = preset.width;
       heightInput.value = preset.height;
       document.querySelectorAll('[data-device]').forEach(btn => btn.classList.toggle('active', btn.dataset.device === device));
-      setMarkerPosition();
+      setMarkerPositions();
       updateOutput();
       currentDeviceText.textContent = `${device} (${preset.width}×${preset.height})`;
     }
 
-    function applyButton(button) {
-      currentButton = button;
-      document.querySelectorAll('[data-button]').forEach(btn => btn.classList.toggle('button-active', btn.dataset.button === button));
-      setMarkerPosition();
-      updateOutput();
-      marker.textContent = buttons[button].label;
-    }
-
-    function setMarkerPosition() {
-      const { left, top } = positions[currentButton][currentDevice] || defaultPositions[currentButton][currentDevice];
-      marker.style.left = left + '%';
-      marker.style.top = top + '%';
+    function setMarkerPositions() {
+      markers.forEach(marker => {
+        const key = marker.dataset.button;
+        const { left, top } = positions[key][currentDevice] || defaultPositions[key][currentDevice];
+        marker.style.left = left + '%';
+        marker.style.top = top + '%';
+      });
     }
 
     function updateOutput() {
@@ -169,23 +165,25 @@
     }
 
     function generateCss() {
-      const deviceBlocks = ['mobile', 'tablet', 'desktop'];
       const lines = [];
       lines.push('#mainButtonContainer {');
       lines.push('  position: fixed;');
-      lines.push('  top: 50%;');
-      lines.push('  left: 50%;');
+      lines.push('  inset: 0;');
+      lines.push('  pointer-events: none;');
+      lines.push('}');
+      lines.push('');
+      lines.push('#mainButtonContainer .hover-button {');
+      lines.push('  position: absolute;');
       lines.push('  transform: translate(-50%, -50%);');
+      lines.push('  pointer-events: auto;');
       lines.push('}');
       lines.push('');
 
       Object.entries(buttons).forEach(([key, info]) => {
         const mobile = positions[key].mobile || defaultPositions[key].mobile;
         lines.push(`#mainButtonContainer .hover-button[data-href="${info.href}"] {`);
-        lines.push('  position: absolute;');
         lines.push(`  top: ${mobile.top}%;`);
         lines.push(`  left: ${mobile.left}%;`);
-        lines.push('  transform: translate(-50%, -50%);');
         lines.push('}');
         lines.push('');
       });
@@ -215,53 +213,67 @@
     }
 
     function updatePositionFromPointer(event) {
+      if (!dragTarget) return;
       const rect = shell.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
       const left = Math.round((x / rect.width) * 100);
       const top = Math.round((y / rect.height) * 100);
-      positions[currentButton][currentDevice] = {
+      const key = dragTarget.dataset.button;
+      positions[key][currentDevice] = {
         left: Math.min(100, Math.max(0, left)),
         top: Math.min(100, Math.max(0, top)),
       };
-      setMarkerPosition();
+      setMarkerPositions();
       updateOutput();
     }
 
-    marker.addEventListener('pointerdown', (event) => {
-      event.preventDefault();
-      dragging = true;
-      marker.classList.add('dragging');
-      marker.setPointerCapture(event.pointerId);
+    markers.forEach(markerItem => {
+      markerItem.addEventListener('pointerdown', event => {
+        event.preventDefault();
+        dragging = true;
+        dragTarget = markerItem;
+        markerItem.classList.add('dragging');
+        markerItem.setPointerCapture(event.pointerId);
+      });
+      markerItem.addEventListener('pointerup', event => {
+        if (!dragging) return;
+        dragging = false;
+        markerItem.classList.remove('dragging');
+        markerItem.releasePointerCapture(event.pointerId);
+        dragTarget = null;
+        savePositions();
+      });
     });
 
-    marker.addEventListener('pointerup', (event) => {
-      if (!dragging) return;
-      dragging = false;
-      marker.classList.remove('dragging');
-      savePositions();
-      marker.releasePointerCapture(event.pointerId);
-    });
-
-    shell.addEventListener('pointermove', (event) => {
+    shell.addEventListener('pointermove', event => {
       if (!dragging) return;
       updatePositionFromPointer(event);
+    });
+
+    document.addEventListener('pointerup', () => {
+      if (!dragging) return;
+      dragging = false;
+      if (dragTarget) {
+        dragTarget.classList.remove('dragging');
+        dragTarget = null;
+        savePositions();
+      }
     });
 
     shell.addEventListener('pointerleave', () => {
       if (dragging) {
         dragging = false;
-        marker.classList.remove('dragging');
-        savePositions();
+        if (dragTarget) {
+          dragTarget.classList.remove('dragging');
+          dragTarget = null;
+          savePositions();
+        }
       }
     });
 
     document.querySelectorAll('[data-device]').forEach(button => {
       button.addEventListener('click', () => applyDevice(button.dataset.device));
-    });
-
-    document.querySelectorAll('[data-button]').forEach(button => {
-      button.addEventListener('click', () => applyButton(button.dataset.button));
     });
 
     document.getElementById('btnResize').addEventListener('click', () => {
@@ -275,15 +287,15 @@
     });
 
     document.getElementById('btnReset').addEventListener('click', () => {
-      positions = { ...defaultPositions };
+      positions = JSON.parse(JSON.stringify(defaultPositions));
       savePositions();
-      setMarkerPosition();
+      setMarkerPositions();
       updateOutput();
     });
 
     document.getElementById('btnClear').addEventListener('click', () => {
       localStorage.removeItem(storageKey);
-      positions = { ...defaultPositions };
+      positions = JSON.parse(JSON.stringify(defaultPositions));
       applyDevice(currentDevice);
       updateOutput();
     });
@@ -308,7 +320,6 @@
       URL.revokeObjectURL(url);
     });
 
-    marker.textContent = buttons[currentButton].label;
     applyDevice(currentDevice);
     updateOutput();
   </script>
